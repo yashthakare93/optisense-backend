@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Auth Architecture Flow</title>
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ startOnLoad: true });
+    </script>
+</head>
+<body style="font-family: sans-serif; padding: 20px;">
+    <h1>Authentication Architecture Flow</h1>
+    <p>This diagram shows the Signup and Login process.</p>
+    <div class="mermaid">
+sequenceDiagram
+    autonumber
+    actor User
+    participant Frontend as React App
+    participant Controller as AuthController
+    participant Service as AuthService
+    participant UserSvc as UserService
+    participant DB as User Table
+
+    Note over User, Frontend: **1. SIGNUP FLOW**
+    User->>Frontend: Click "Sign Up"
+    Frontend->>Controller: POST /signup
+    Controller->>Service: signup(req)
+    Service->>UserSvc: existsByEmail?
+    UserSvc-->>Service: false
+    Service->>UserSvc: save(User)
+    UserSvc->>DB: INSERT
+    DB-->>Service: User Entity
+    Service->>Service: Generate JWT
+    Service-->>Controller: AuthResponse
+    Controller-->>Frontend: JSON Response
+    Frontend->>User: Redirect
+
+    Note over User, Frontend: **2. LOGIN FLOW**
+    User->>Frontend: Click "Login"
+    Frontend->>Controller: POST /login
+    Controller->>Service: login(req)
+    Service->>DB: findByEmail
+    DB-->>Service: User Entity
+    Service->>Service: Check Password
+    Service->>Service: Generate JWT
+    Service-->>Controller: AuthResponse
+    Controller-->>Frontend: JSON Response
+    </div>
+</body>
+</html>

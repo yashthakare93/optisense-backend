@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Shop Management Architecture</title>
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ startOnLoad: true });
+    </script>
+</head>
+
+<body style="font-family: sans-serif; padding: 20px;">
+    <h1>Shop Management Architecture</h1>
+    <div class="mermaid">
+        sequenceDiagram
+        autonumber
+        actor Seller
+        actor Admin
+        participant Frontend as UI
+        participant Controller as ShopController
+        participant Service as ShopService
+        participant DB as Shop Table
+
+        Note over Seller, Frontend: **1. CREATE SHOP**
+        Seller->>Frontend: Submit Shop Details
+        Frontend->>Controller: POST /shop/create
+        Controller->>Service: createShop(shop)
+        Service->>Service: Set Status = PENDING
+        Service->>DB: INSERT INTO shop
+        DB-->>Service: Saved Shop
+        Service-->>Frontend: JSON Response
+
+        Note over Admin, Frontend: **2. APPROVE SHOP**
+        Admin->>Frontend: Click "Approve"
+        Frontend->>Controller: PUT /shops/1/approve
+        Controller->>Service: approveShop(1)
+        Service->>DB: UPDATE shop SET status='APPROVED'
+        DB-->>Service: Updated Shop
+        Service-->>Frontend: Success
+    </div>
+</body>
+
+</html>

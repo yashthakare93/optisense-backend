@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Product Filter Architecture</title>
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ startOnLoad: true });
+    </script>
+</head>
+
+<body style="font-family: sans-serif; padding: 20px;">
+    <h1>Product Filter & Search Architecture</h1>
+    <div class="mermaid">
+        sequenceDiagram
+        autonumber
+        actor User
+        participant Sidebar as FilterSidebar (UI)
+        participant Marketplace as Marketplace (UI)
+        participant Controller as ProductController
+        participant Service as ProductService
+        participant Spec as ProductSpecifications
+        participant DB as Database
+
+        User->>Sidebar: Select "Black"
+        Sidebar->>Marketplace: Update State
+        Marketplace->>Controller: GET /api/products?frameColours=Black
+        Controller->>Service: getAllProducts
+        Service->>Spec: Build Dynamic Query
+        Spec-->>Service: JPA Specification
+        Service->>DB: Execute Query
+        Note right of Service: SQL: ... JOIN specs s WHERE s.val IN ('Black')
+        DB-->>Service: List&lt;Product&gt;
+        Service-->>Marketplace: JSON Response
+        Marketplace->>User: Show Grid
+    </div>
+</body>
+
+</html>

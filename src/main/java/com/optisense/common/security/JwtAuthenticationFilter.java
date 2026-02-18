@@ -18,7 +18,10 @@ import java.io.IOException;
 import java.security.Key;
 import java.util.Collections;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Component
+@Slf4j
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Value("${jwt.secret}")
@@ -52,7 +55,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     SecurityContextHolder.getContext().setAuthentication(authToken);
                 }
             } catch (Exception e) {
-                // Invalid token - continue without authentication
+                log.error("JWT Authentication failed: {}", e.getMessage());
             }
         }
 

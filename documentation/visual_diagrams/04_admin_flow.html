@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Admin User Management Architecture</title>
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ startOnLoad: true });
+    </script>
+</head>
+
+<body style="font-family: sans-serif; padding: 20px;">
+    <h1>Admin User Management Architecture</h1>
+    <div class="mermaid">
+        sequenceDiagram
+        autonumber
+        actor Admin
+        participant Dashboard as Admin UI
+        participant Controller as AdminController
+        participant Service as UserService
+        participant DB as User Table
+
+        Note over Admin, Dashboard: **1. VIEW USERS**
+        Admin->>Dashboard: Open User List
+        Dashboard->>Controller: GET /admin/users
+        Controller->>Service: findAll()
+        Service->>DB: SELECT * FROM users
+        DB-->>Service: List&lt;User&gt;
+        Service-->>Controller: Return List
+        Controller-->>Dashboard: JSON Response
+
+        Note over Admin, Dashboard: **2. DELETE USER**
+        Admin->>Dashboard: Click "Delete"
+        Dashboard->>Controller: DELETE /admin/users/5
+        Controller->>Service: deleteById(5)
+        Service->>DB: DELETE FROM users WHERE id=5
+        DB-->>Service: Void
+        Service-->>Controller: Success
+        Controller-->>Dashboard: 200 OK
+    </div>
+</body>
+
+</html>

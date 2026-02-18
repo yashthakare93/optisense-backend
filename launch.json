@@ -1,0 +1,11 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "appland",
+      "request": "launch",
+      "name": "Launch AppLand",
+      "appLandConfigPath": "${workspaceFolder}/.appland/config.yml"
+    }
+  ]
+}
